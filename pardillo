@@ -1,0 +1,131 @@
+// Clase Libro
+public class Libro {
+    private String codigo;
+    private String titulo;
+    private double precio;
+    private int stock;
+
+    public Libro(String codigo, String titulo, double precio, int stock) {
+        this.codigo = codigo;
+        this.titulo = titulo;
+        this.precio = precio;
+        this.stock = stock;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void disminuirPrecio() {
+        this.precio *= 0.81; // 19% de descuento
+    }
+
+    public void incrementarStock() {
+        this.stock += 31;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    @Override
+    public String toString() {
+        return "Código: " + codigo + ", Título: " + titulo + ", Precio: " + precio + ", Stock: " + stock;
+    }
+}
+
+// Clase ArregloLibros
+import java.util.ArrayList;
+
+public class ArregloLibros {
+    private ArrayList<Libro> libros;
+
+    public ArregloLibros() {
+        this.libros = new ArrayList<>();
+    }
+
+    public void adicionar(Libro libro) {
+        libros.add(libro);
+    }
+
+    public Libro obtener(int index) {
+        return libros.get(index);
+    }
+
+    public int tamaño() {
+        return libros.size();
+    }
+
+    public void eliminar(int index) {
+        libros.remove(index);
+    }
+
+    public Libro buscar(String codigo) {
+        for (Libro libro : libros) {
+            if (libro.getCodigo().equals(codigo)) {
+                return libro;
+            }
+        }
+        return null;
+    }
+}
+
+// Clase Problema1
+import javax.swing.JOptionPane;
+
+public class Problema1 {
+    private ArregloLibros arregloLibros;
+
+    public Problema1() {
+        this.arregloLibros = new ArregloLibros();
+    }
+
+    public void adicionarLibros() {
+        String codigo = JOptionPane.showInputDialog("Ingrese el código del libro:");
+        Libro existente = arregloLibros.buscar(codigo);
+
+        if (existente == null) {
+            String titulo = JOptionPane.showInputDialog("Ingrese el título del libro:");
+            double precio = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el precio del libro:"));
+            int stock = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el stock del libro:"));
+
+            Libro nuevoLibro = new Libro(codigo, titulo, precio, stock);
+            arregloLibros.adicionar(nuevoLibro);
+
+            JOptionPane.showMessageDialog(null, "Libro adicionado. Cantidad actual de Libros: " + arregloLibros.tamaño());
+        } else {
+            JOptionPane.showMessageDialog(null, "El código ingresado ya existe.");
+        }
+    }
+
+    public void modificarLibro() {
+        String codigo = JOptionPane.showInputDialog("Ingrese el código del libro:");
+        Libro libro = arregloLibros.buscar(codigo);
+
+        if (libro != null) {
+            libro.disminuirPrecio();
+            libro.incrementarStock();
+
+            JOptionPane.showMessageDialog(null, "Modificación efectuada. Nuevo precio: " + libro.getPrecio() +
+                    ". Nuevo stock: " + libro.getStock());
+        } else {
+            JOptionPane.showMessageDialog(null, "El código ingresado no existe.");
+        }
+    }
+
+    public void eliminarLibro() {
+        String codigo = JOptionPane.showInputDialog("Ingrese el código del libro:");
+        Libro libro = arregloLibros.buscar(codigo);
+
+        if (libro != null) {
+            arregloLibros.eliminar(arregloLibros.tamaño() - 1); // Eliminar el último libro encontrado (podría ser mejorado)
+            JOptionPane.showMessageDialog(null, "El libro con código " + codigo + " fue eliminado.");
+        } else {
+            JOptionPane.showMessageDialog(null, "El código ingresado no existe.");
+        }
+    }
+}
